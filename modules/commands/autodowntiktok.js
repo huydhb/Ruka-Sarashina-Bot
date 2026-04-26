@@ -57,40 +57,61 @@ async function noprefix(arg) {
     links = [...new Set(links)];
 
     for (const link of links) {
-        api.sendMessage("⏳ Đang tải xuống video TikTok, vui lòng chờ...", event.threadID, async (err, info) => {
+        api.sendMessage("⏳ Đang kiểm tra liên kết TikTok...", event.threadID, async (err, info) => {
             try {
                 const res = await axios.get(`https://www.tikwm.com/api/?url=${encodeURIComponent(link)}`);
                 const data = res.data.data;
 
-                if (!data || !data.play) {
+                if (!data) {
                     if (info) api.unsendMessage(info.messageID);
                     return;
                 }
 
+                // Cập nhật thông báo trạng thái
+                const isImages = data.images && Array.isArray(data.images) && data.images.length > 0;
+                if (info) api.editMessage(isImages ? `⏳ Đang tải xuống slide ảnh TikTok (${data.images.length} ảnh)...` : `⏳ Đang tải xuống video TikTok...`, info.messageID);
+
                 const title = data.title || 'Không có tiêu đề';
                 const author = data.author ? data.author.nickname : 'Không rõ';
-                const duration = data.duration || 0;
                 const digg = (data.digg_count || 0).toLocaleString();
                 const comment = (data.comment_count || 0).toLocaleString();
                 const share = (data.share_count || 0).toLocaleString();
                 const download = (data.download_count || 0).toLocaleString();
 
-                const body = `🎬 TIKTOK DOWNLOADER\n` +
+                let body = `🎬 TIKTOK DOWNLOADER\n` +
                             `━━━━━━━━━━━━━━━━━━━━━━\n` +
                             `📌 ${title}\n` +
-                            `🎤 ${author}  |  ⏱️ ${duration}s\n` +
+                            `🎤 ${author}\n` +
                             `━━━━━━━━━━━━━━━━━━━━━━\n` +
-                            `❤️ ${digg}  ` +
-                            `💬 ${comment}  ` +
-                            `🔁 ${share}  ` +
-                            `⬇️ ${download}\n` +
+                            `❤️ ${digg}  💬 ${comment}  🔁 ${share}\n` +
                             `━━━━━━━━━━━━━━━━━━━━━━`;
 
-                const stream = await reqStreamURL(data.play);
+                let attachments = [];
+
+                if (isImages) {
+                    // Xử lý Slide Ảnh
+                    for (const imgURL of data.images) {
+                        attachments.push(await reqStreamURL(imgURL));
+                    }
+                    // Thêm nhạc nền nếu có
+                    if (data.play || data.music) {
+                        attachments.push(await reqStreamURL(data.play || data.music));
+                    }
+                } else {
+                    // Xử lý Video
+                    if (data.play) {
+                        attachments.push(await reqStreamURL(data.play));
+                    }
+                }
+
+                if (attachments.length == 0) {
+                    if (info) api.unsendMessage(info.messageID);
+                    return;
+                }
 
                 await api.sendMessage({
                     body: body,
-                    attachment: stream
+                    attachment: attachments
                 }, event.threadID, () => {
                     if (info) api.unsendMessage(info.messageID);
                 }, event.messageID);
