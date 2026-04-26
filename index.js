@@ -112,22 +112,23 @@ var job = [
 ];
 var random =
   job[Math.floor(Math.random() * job.length)]
-// === WEB SERVER ĐÃ TẮT ĐỂ TIẾT KIỆM RAM ===
-// const express = require('express');
-// const app = express();
-// const port = process.env.PORT || 5000;
-// app.get('/', (req, res) => res.send('Bot is running!'));
-// app.listen(port, () => {
-//   console.log(chalk.hex("#" + random)(`[ MIRAI SECURITY ] -> Máy chủ đang khởi động trên port ${port}...`));
-// });
+// === WEB SERVER (Render keep-alive) ===
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+app.get('/', (req, res) => res.json({ status: '🟢 Online', uptime: process.uptime().toFixed(0) + 's' }));
+app.get('/health', (req, res) => res.sendStatus(200));
+app.listen(port, () => {
+  console.log(chalk.green(`[ SERVER ] Keep-alive server chạy trên port ${port}`));
+});
 
-// === KEEP ALIVE (PING) - ĐÃ TẮT ===
-// const RENDER_URL = process.env.RENDER_EXTERNAL_URL || process.env.URL;
-// if (RENDER_URL) {
-//   setInterval(() => {
-//     axios.get(RENDER_URL).catch(() => { });
-//   }, 5 * 60 * 1000);
-// }
+// === KEEP ALIVE (tự ping để không bị sleep) ===
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+if (RENDER_URL) {
+  setInterval(() => {
+    axios.get(RENDER_URL + '/health').catch(() => {});
+  }, 5 * 60 * 1000); // Ping mỗi 5 phút
+}
 // =============================================
 ///////////////////////////////////////
 ///////////////////////////////////////
