@@ -5,6 +5,14 @@ const chalkAnimation = require('chalkercli');
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
+
+// Suppress DEP0044 Deprecation Warning (util.isArray)
+const originalEmitWarning = process.emitWarning;
+process.emitWarning = (warning, ...args) => {
+    if (typeof warning === 'string' && warning.includes('DEP0044')) return;
+    if (warning && (warning.code === 'DEP0044' || (warning.message && warning.message.includes('util.isArray')))) return;
+    return originalEmitWarning.call(process, warning, ...args);
+};
 const gradient = require('gradient-string');
 const { execSync } = require('child_process');
 const logger = require("./utils/log.js");

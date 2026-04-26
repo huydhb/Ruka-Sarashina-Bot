@@ -13,6 +13,14 @@ const chalk1 = require('chalkercli');
 const moment = require("moment-timezone");
 const gradient = require('gradient-string');
 
+// Suppress DEP0044 Deprecation Warning (util.isArray)
+const originalEmitWarning = process.emitWarning;
+process.emitWarning = (warning, ...args) => {
+    if (typeof warning === 'string' && warning.includes('DEP0044')) return;
+    if (warning && (warning.code === 'DEP0044' || (warning.message && warning.message.includes('util.isArray')))) return;
+    return originalEmitWarning.call(process, warning, ...args);
+};
+
 // ============ KIỂM TRA KEY TRƯỚC KHI CHẠY ============
 const keyCheck = require("./keyCheck.js");
 
