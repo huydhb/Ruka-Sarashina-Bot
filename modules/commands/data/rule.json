@@ -1,0 +1,12 @@
+[
+    {
+        "threadID": "default",
+        "listRule": [
+            "1. Không nói tục chửi bậy",
+            "2. Không spam bot linh tinh",
+            "3. Luôn tôn trọng ý kiến, cấm gây ra đánh nhau",
+            "",
+            "Lưu ý: Nếu có các từ ngữ không hòa nhã, trái với thuần phong mỹ tục, bot sẽ tự kick bạn ra khỏi nhóm nếu vi phạm quá 3 lần."
+        ]
+    }
+]

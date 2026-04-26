@@ -1,0 +1,31 @@
+# Session & Credentials (TUYỆT ĐỐI KHÔNG PUSH LÊN GITHUB)
+appstate.json
+appstate_backup.json
+acc.json
+key.txt
+
+# Config nhạy cảm (chứa Admin ID, token...)
+FastConfigFca.json
+config.json
+
+# Dependencies (cài lại bằng npm install)
+node_modules/
+
+# Cache & Media tạm
+modules/commands/cache/
+modules/events/cache/
+
+# Database SQLite
+includes/data.sqlite
+includes/data_sqlite/
+
+# File temp
+*.temp
+config.json.temp
+
+# Logs
+*.log
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
