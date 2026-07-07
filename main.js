@@ -6,7 +6,15 @@ const { readdirSync, readFileSync, writeFileSync, existsSync, unlinkSync, rm, mk
 const { join, resolve } = require("path");
 
 // Đảm bảo các thư mục cache tồn tại (tránh lỗi ENOENT khi deploy lên Render/VPS)
-const cacheDirs = ["modules/commands/cache", "modules/commands/cache/data", "modules/commands/tuongtac/checktt"];
+const cacheDirs = [
+    "modules/commands/cache",
+    "modules/commands/cache/data",
+    "modules/commands/cache/canvas",
+    "modules/commands/cache/timejoin",
+    "modules/commands/cache/zwar",
+    "modules/commands/cache/ảnh",
+    "modules/commands/tuongtac/checktt"
+];
 cacheDirs.forEach(dir => {
     if (!existsSync(join(process.cwd(), dir))) {
         mkdirSync(join(process.cwd(), dir), { recursive: true });

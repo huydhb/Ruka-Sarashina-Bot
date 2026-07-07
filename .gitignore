@@ -21,10 +21,6 @@ appstate.json
 2.json
 
 # Cache and temp files
-.replit
-replit.nix
 main.sh
 .temp/
 *.temp
-modules/commands/cache/
-modules/commands/tuongtac/checktt/*.json

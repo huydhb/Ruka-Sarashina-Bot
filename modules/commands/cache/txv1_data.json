@@ -1,0 +1,48 @@
+{
+  "currentRound": 16,
+  "history": [
+    {
+      "round": 6,
+      "result": "xỉu"
+    },
+    {
+      "round": 7,
+      "result": "xỉu"
+    },
+    {
+      "round": 8,
+      "result": "xỉu"
+    },
+    {
+      "round": 9,
+      "result": "xỉu"
+    },
+    {
+      "round": 10,
+      "result": "xỉu"
+    },
+    {
+      "round": 11,
+      "result": "xỉu"
+    },
+    {
+      "round": 12,
+      "result": "tài"
+    },
+    {
+      "round": 13,
+      "result": "xỉu"
+    },
+    {
+      "round": 14,
+      "result": "xỉu"
+    },
+    {
+      "round": 15,
+      "result": "xỉu"
+    }
+  ],
+  "enabledThreads": [
+    "7102222933173600"
+  ]
+}
