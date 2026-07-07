@@ -2,8 +2,16 @@
 //========= Require all variable need use =========//
 /////////////////////////////////////////////////////
 const moment = require("moment-timezone");
-const { readdirSync, readFileSync, writeFileSync, existsSync, unlinkSync, rm } = require("fs-extra");
+const { readdirSync, readFileSync, writeFileSync, existsSync, unlinkSync, rm, mkdirSync } = require("fs-extra");
 const { join, resolve } = require("path");
+
+// Đảm bảo các thư mục cache tồn tại (tránh lỗi ENOENT khi deploy lên Render/VPS)
+const cacheDirs = ["modules/commands/cache", "modules/commands/cache/data", "modules/commands/tuongtac/checktt"];
+cacheDirs.forEach(dir => {
+    if (!existsSync(join(process.cwd(), dir))) {
+        mkdirSync(join(process.cwd(), dir), { recursive: true });
+    }
+});
 const { execSync } = require('child_process');
 const logger = require("./utils/log.js");
 const login = require("./lib/fca-auto"); 
