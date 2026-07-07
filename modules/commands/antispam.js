@@ -4,7 +4,7 @@ module.exports.config = {
     name: "antispam",
     version: "1.0.1",
     hasPermssion: 1,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Tự động kick người dùng khi spam trong nhóm",
     commandCategory: "Quản Lí Box",
     usages: "antispam",

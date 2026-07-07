@@ -6,7 +6,7 @@ module.exports.config = {
     name: "cw",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Chụp trang cá nhân Facebook",
     commandCategory: "Tiện ích",
     usages: ["cw"],

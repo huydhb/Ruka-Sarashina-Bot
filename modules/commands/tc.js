@@ -24,7 +24,7 @@ module.exports.config = {
     name: "tc",
     version: "1.1.0",
     hasPermssion: 3,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Thống kê dùng lệnh trên Hệ Thống bot",
     commandCategory: "Hệ Thống",
     usages: "[day|week|all|reset]",

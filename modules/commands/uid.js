@@ -2,7 +2,7 @@ module.exports.config = {
     name: "uid",
     version: "1.2.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Lấy UID người dùng.",
     commandCategory: "Tiện ích",
     cooldowns: 5,

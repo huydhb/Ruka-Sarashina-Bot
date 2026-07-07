@@ -1,4 +1,4 @@
-# Tài liệu Kiến trúc: Bot_Messager_JS (TatsuYTB / Ruka-Sarashina)
+# Tài liệu Kiến trúc: Bot_Messager_JS (RukaChan / Ruka-Sarashina)
 
 Tài liệu này cung cấp một cái nhìn tổng quan toàn diện về kiến trúc, các thành phần cốt lõi và luồng dữ liệu của dự án bot Facebook Messenger viết bằng Node.js.
 

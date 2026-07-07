@@ -7,7 +7,7 @@ module.exports.config = {
   name: "pixiv",
   version: "1.0",
   hasPermssion: 3,
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Tìm kiếm ảnh trên Pixiv",
   commandCategory: "Tiện ích",
   usages: "[từ khóa] [số ảnh]",

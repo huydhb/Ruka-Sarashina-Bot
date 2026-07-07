@@ -2,7 +2,7 @@ module.exports.config = {
   name: "timejoin",
   eventType: ["log:unsubscribe"],
   version: "1.0.2",
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Tự xóa data time join user khi out (hỗ trợ nhiều người)"
 };
 

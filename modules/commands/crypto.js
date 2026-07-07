@@ -10,7 +10,7 @@ module.exports.config = {
   name: "crypto",
   version: "1.4.0",
   hasPermssion: 3,
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Theo dõi giá tiền mã hóa và cảnh báo khi đạt ngưỡng giá.",
   commandCategory: "Tiện ích",
   usages: "crypto follow <crypto_name> <price_threshold> | crypto <crypto_name> [interval] | crypto stop | crypto list",

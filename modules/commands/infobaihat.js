@@ -6,7 +6,7 @@ module.exports.config = {
   name: "infobaihat",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Lấy thông tin bài hát từ iTunes",
   commandCategory: "Công cụ",
   usages: "[Tên bài hát]",

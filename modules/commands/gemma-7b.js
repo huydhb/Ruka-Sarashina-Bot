@@ -6,7 +6,7 @@ module.exports.config = {
     name: "gemma",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Chat với AI (Gemini)",
     commandCategory: "AI",
     usages: "gemma nội dung",

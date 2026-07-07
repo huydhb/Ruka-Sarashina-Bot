@@ -5,7 +5,7 @@ module.exports.config = {
     name: "genshin1",
     version: "1.0.0",
     hasPermssion: 3,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Fetch information about a Genshin Impact player by UID",
     commandCategory: "Hệ Thống",
     usages: "[UID]",

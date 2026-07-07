@@ -4,7 +4,7 @@ module.exports.config = {
   name: "autoban",
   version: "1.1.0",
   hasPermssion: 3,
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Tự động ban người dùng khi họ chửi bot, ngoại trừ những người có ID được chỉ định",
   commandCategory: "Hệ Thống",
   usages: "",

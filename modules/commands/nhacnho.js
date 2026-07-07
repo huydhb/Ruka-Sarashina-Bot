@@ -32,7 +32,7 @@ module.exports.config = {
     name: "nhacnho",
     version: "1.2.0",
     hasPermssion: 3,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Tạo nhắc nhở theo ngày + giờ kèm lý do, có thể cancel",
     commandCategory: "Hệ Thống",
     usages: "<số ngày> <giờ:phút> <lý do> [uid] | cancel",

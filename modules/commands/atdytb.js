@@ -38,7 +38,7 @@ exports.config = {
   name: 'atdytb',
   version: '1',
   hasPermssion: 0,
-  credits: 'TatsuYTB',
+  credits: 'RukaChan',
   description: '',
   commandCategory: 'Tiện ích',
   usages: [],

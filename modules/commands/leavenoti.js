@@ -5,7 +5,7 @@ module.exports.config = {
     name: "leavenoti",
     version: "1.0.0",
     hasPermssion: 1,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Quản lý tin nhắn rời nhóm tùy biến cho từng nhóm",
     commandCategory: "Quản Lí Box",
     usages: "[add <message> /remove /on /off]",

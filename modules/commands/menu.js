@@ -2,7 +2,7 @@ module.exports.config = {
     name: 'menu',
     version: '1.1.1',
     hasPermssion: 0,
-    credits: 'DC-Nam mod by Vtuan',//Mod by TatsuYTB
+    credits: 'DC-Nam mod by Vtuan',//Mod by RukaChan
     description: 'Xem danh sách nhóm lệnh, thông tin lệnh',
     commandCategory: 'Danh sách lệnh',
     usages: '[...name commands|all|per <permission level>]',

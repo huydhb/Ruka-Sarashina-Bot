@@ -5,7 +5,7 @@ module.exports.config = {
     name: "atstk",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "auto sticker",
     commandCategory: "Hệ Thống",
     usages: "atstk on/off",

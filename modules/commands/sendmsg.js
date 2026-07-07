@@ -2,7 +2,7 @@ module.exports.config = {
 	name: "sendmsg",
 	version: "1.0.7",
 	hasPermssion: 3,
-	credits: "TatsuYTB", 
+	credits: "RukaChan", 
 	description: "Gửi tin nhắn đến nhóm bằng ID!",
 	commandCategory: "Hệ Thống",
 	usages: "ID [Text]",

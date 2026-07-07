@@ -5,7 +5,7 @@ module.exports.config = {
     name: "joinnoti",
     version: "1.1.0",
     hasPermssion: 1,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Quản lý tin nhắn chào tùy biến cho từng nhóm với biến {name}, {author}...",
     commandCategory: "Quản Lí Box",
     usages: "[add <message> /remove /on /off]",

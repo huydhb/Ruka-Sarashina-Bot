@@ -2,7 +2,7 @@ module.exports.config = {
     name: "domin",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Dò mìn",
     commandCategory: "Trò Chơi",
     usages: "",

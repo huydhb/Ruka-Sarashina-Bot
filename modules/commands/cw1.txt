@@ -6,7 +6,7 @@ module.exports.config = {
     name: "capweb",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Chụp màn hình một trang web theo URL người dùng cung cấp",
     commandCategory: "Tiện ích",
     usages: ["capweb <URL>"],

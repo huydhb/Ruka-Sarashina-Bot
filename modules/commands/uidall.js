@@ -2,7 +2,7 @@ module.exports.config = {
     name: "uidall",
     version: "1.0.5",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Get all uid and names in Group.",
     commandCategory: "Nhóm",
     cooldowns: 2,

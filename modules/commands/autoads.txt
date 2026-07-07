@@ -7,7 +7,7 @@ module.exports.config = {
     name: "autoads",
     version: "1.0.0",
     hasPermssion: 3,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "ADS",
     commandCategory: "Hệ Thống",
     usages: "",

@@ -5,7 +5,7 @@ module.exports.config = {
   name: "donate",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Donate cho thằng admin nghèo khổ",
   commandCategory: "Tiện ích",
   usages: "donate",

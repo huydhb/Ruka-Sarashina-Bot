@@ -6,7 +6,7 @@ module.exports.config = {
     name: "mixtral",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Chat với AI (Mixtral)",
     commandCategory: "AI",
     usages: "mixtral nội dung",

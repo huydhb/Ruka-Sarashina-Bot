@@ -4,7 +4,7 @@ module.exports.config = {
     name: "sl",
     version: "1.0.0",
     hasPermssion: 3,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Bật tắt chế độ selfListen",
     commandCategory: "Hệ Thống",
     usages: "sl on/off",

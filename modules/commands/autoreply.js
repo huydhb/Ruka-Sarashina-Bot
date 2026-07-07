@@ -7,7 +7,7 @@ module.exports.config = {
     name: "autoreply",
     version: "1.1.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Thiết lập tự động trả lời tin nhắn cho từng nhóm, hỗ trợ hình ảnh và video",
     commandCategory: "Quản Lí Box",
     usages: "[add|addvideo|addimage|list] [Từ Khóa] | [Bot Trả Lời]",

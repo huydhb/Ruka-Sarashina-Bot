@@ -6,7 +6,7 @@ module.exports.config = {
     name: "gpt4",
     version: "1.0.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Chat với AI GPT4",
     commandCategory: "AI",
     usages: "gpt4 nội dung",

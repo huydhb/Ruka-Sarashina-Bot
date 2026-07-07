@@ -6,7 +6,7 @@ module.exports.config = {
     name: "sc",
     version: "1.0.1",
     hasPermssion: 3, 
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Chụp ảnh màn hình thiết bị",
     commandCategory: "Hệ Thống",
     usages: "screenshot",

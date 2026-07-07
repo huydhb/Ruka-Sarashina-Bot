@@ -2,7 +2,7 @@ module.exports.config = {
     name: "setlove",
     version: "1.1.0",
     hasPermssion: 0,
-    credits: "TatsuYTB",
+    credits: "RukaChan",
     description: "Set love with someone",
     commandCategory: "Trò Chơi",
     usages: "#setlove set @tag | #setlove check | #setlove huy | #setlove suaanh | #setlove list",

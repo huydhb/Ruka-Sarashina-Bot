@@ -4,7 +4,7 @@ module.exports.config = {
   name: "servermc",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "TatsuYTB",
+  credits: "RukaChan",
   description: "Kiểm tra trạng thái máy chủ Minecraft",
   commandCategory: "Tiện ích",
   usages: "[ip hoặc domain]",
