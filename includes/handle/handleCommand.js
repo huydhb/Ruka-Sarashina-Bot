@@ -83,7 +83,7 @@ const dataAdbox = require('./../../modules/commands/cache/data.json');
 
     let callback = function () {
       api.sendMessage({
-        body: `${global.getText("handleCommand", checker.bestMatch.target)}`,
+        body: `${global.getText("handleCommand", "commandNotExist", checker.bestMatch.target)}`,
        //attachment: [fs.createReadStream(__dirname + `/1.png`), fs.createReadStream(__dirname + `/2.png`)]
          }, event.threadID, () => {
            fs.unlinkSync(__dirname + `/1.png`);

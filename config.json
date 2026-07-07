@@ -14,7 +14,7 @@
     "BOTNAME": "",
     "AMDIN_NAME": "",
     "FACEBOOK_ADMIN": "",
-    "PREFIX": "",
+    "PREFIX": "/",
     "ADMINBOT": [
         "100038896995918"
     ],

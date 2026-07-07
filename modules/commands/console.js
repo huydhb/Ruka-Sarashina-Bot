@@ -28,7 +28,7 @@ var random3 = job[Math.floor(Math.random() * job.length)]
 var random4 = job[Math.floor(Math.random() * job.length)]
 var random5 = job[Math.floor(Math.random() * job.length)]
 var random6 = job[Math.floor(Math.random() * job.length)]
-  console.log(chalk.hex("#" + random)(`[📌]→ Tên nhóm: ${nameBox}`) + `\n` + chalk.hex("#" + random5)(`[🆔]→ ID nhóm: ${event.threadID}`) + `\n` + chalk.hex("#" + random6)(`[💢]→ Tên người dùng: ${nameUser}`) + `\n` + chalk.hex("#" + random1)(`[🆔]→ ID người dùng: ${event.senderID}`) + `\n` + chalk.hex("#" + random2)(`[💭]→ Nội dung: ${msg}`) + `\n` + chalk.hex("#" + random3)(`[ ${time} ]`) + `\n` + chalk.hex("#" + random4)(`◆━━━━━━━━━◆𝘛𝘢𝘵𝘴𝘶𝘠𝘛𝘉◆━━━━━━━━◆\n`)); 
+  console.log(chalk.hex("#" + random)(`[📌]→ Tên nhóm: ${nameBox}`) + `\n` + chalk.hex("#" + random5)(`[🆔]→ ID nhóm: ${event.threadID}`) + `\n` + chalk.hex("#" + random6)(`[💢]→ Tên người dùng: ${nameUser}`) + `\n` + chalk.hex("#" + random1)(`[🆔]→ ID người dùng: ${event.senderID}`) + `\n` + chalk.hex("#" + random2)(`[💭]→ Nội dung: ${msg}`) + `\n` + chalk.hex("#" + random3)(`[ ${time} ]`) + `\n` + chalk.hex("#" + random4)(`RukaChan\n`)); 
 }
 module.exports.run = async function ({ api, args, Users, event, Threads, utils, client }) {
 

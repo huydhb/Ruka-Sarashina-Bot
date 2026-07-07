@@ -58,7 +58,7 @@ module.exports.handleReply = async function ({ api, event, handleReply }) {
 
         // Text reply trực tiếp vào lựa chọn
         api.sendMessage(
-            `==== 『 𝐒𝐈𝐍𝐆 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 』 ====\n\n→ Title: ${data.title}\n→ Thời lượng: ${this.convertHMS(data.dur)}\n→ Tên kênh: ${data.author}\n→ Số view: ${data.viewCount}\n→ Thời gian xử lý: ${Math.floor((Date.now() - data.timestart) / 1000)} giây\n━━━━━━━━━━━━━━━\n=== 『 𝘛𝘢𝘵𝘴𝘶𝘠𝘛𝘉💤 』 ===\n\n===「${timeNow}」===`,
+            `==== 『 𝐒𝐈𝐍𝐆 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 』 ====\n\n→ Title: ${data.title}\n→ Thời lượng: ${this.convertHMS(data.dur)}\n→ Tên kênh: ${data.author}\n→ Số view: ${data.viewCount}\n→ Thời gian xử lý: ${Math.floor((Date.now() - data.timestart) / 1000)} giây\n━━━━━━━━━━━━━━━\n=== 『 RukaChan💤 』 ===\n\n===「${timeNow}」===`,
             event.threadID,
             () => {
                 // Sau đó mới gửi nhạc (không reply gì cả)
@@ -105,7 +105,7 @@ module.exports.run = async function ({ api, event, args }) {
 
             // Gửi text trước
             api.sendMessage(
-                `==== 『 𝐒𝐈𝐍𝐆 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 』 ====\n\n→ Title: ${data.title}\n→ Thời lượng: ${this.convertHMS(data.dur)}\n→ Tên kênh: ${data.author}\n→ Số view: ${data.viewCount}\n→ Thời gian xử lý: ${Math.floor((Date.now() - data.timestart) / 1000)} giây\n━━━━━━━━━━━━━━━\n=== 『 𝘛𝘢𝘵𝘴𝘶𝘠𝘛𝘉💤 』 ===\n\n===「${timeNow}」===`,
+                `==== 『 𝐒𝐈𝐍𝐆 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 』 ====\n\n→ Title: ${data.title}\n→ Thời lượng: ${this.convertHMS(data.dur)}\n→ Tên kênh: ${data.author}\n→ Số view: ${data.viewCount}\n→ Thời gian xử lý: ${Math.floor((Date.now() - data.timestart) / 1000)} giây\n━━━━━━━━━━━━━━━\n=== 『 RukaChan💤 』 ===\n\n===「${timeNow}」===`,
                 event.threadID,
                 () => {
                     // Sau đó mới gửi nhạc

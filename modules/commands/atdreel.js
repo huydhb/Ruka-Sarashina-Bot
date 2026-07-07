@@ -1,5 +1,5 @@
 const configCommand = {
-    name: 'autodownreel',
+    name: 'atdreel',
     version: '1.0.0',
     hasPermssion: 2,
     credits: 'RukaChan',

@@ -119,6 +119,7 @@ for (const item of langData) {
 global.getText = function (...args) {
     const langText = global.language;    
     if (!langText.hasOwnProperty(args[0])) throw `${__filename} - Not found key language: ${args[0]}`;
+    if (!langText[args[0]].hasOwnProperty(args[1])) throw `${__filename} - Not found key language: ${args[0]}.${args[1]}`;
     var text = langText[args[0]][args[1]];
     for (var i = args.length - 1; i > 0; i--) {
         const regEx = RegExp(`%${i}`, 'g');
