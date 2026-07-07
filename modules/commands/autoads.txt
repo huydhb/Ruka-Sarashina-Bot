@@ -1,0 +1,118 @@
+const fs = require('fs');
+const path = require('path');
+const schedule = require('node-schedule');
+const moment = require('moment-timezone');
+
+module.exports.config = {
+    name: "autoads",
+    version: "1.0.0",
+    hasPermssion: 3,
+    credits: "TatsuYTB",
+    description: "ADS",
+    commandCategory: "Hệ Thống",
+    usages: "",
+    cooldowns: 5,
+};
+
+module.exports.languages = {
+    "vi": {},
+    "en": {}
+};
+
+const sentLogDir = path.join(__dirname, 'data');
+const sentLogPath = path.join(sentLogDir, 'sentLog.json');
+
+// Function to ensure sent log file and directory exist
+const ensureSentLogExists = () => {
+    if (!fs.existsSync(sentLogDir)) {
+        fs.mkdirSync(sentLogDir, { recursive: true });
+    }
+    if (!fs.existsSync(sentLogPath)) {
+        fs.writeFileSync(sentLogPath, JSON.stringify({}));
+    }
+};
+
+// Function to load sent log
+const loadSentLog = () => {
+    ensureSentLogExists();
+    return JSON.parse(fs.readFileSync(sentLogPath));
+};
+
+// Function to save sent log
+const saveSentLog = (log) => {
+    ensureSentLogExists();
+    fs.writeFileSync(sentLogPath, JSON.stringify(log, null, 2));
+};
+
+const shareContactToAllThreads = async (api) => {
+    try {
+        console.log('Starting shareContactToAllThreads function');
+        const adminContact = global.config.ADMINBOT[0];
+        const message = '--->𝐓𝐢𝐧 𝐍𝐡𝐚̆́𝐧 𝐓𝐮̛̣ 𝐃𝐨̣̂𝐧𝐠<---\n\n->𝐀𝐝𝐦𝐢𝐧 𝐜𝐮𝐧𝐠 𝐜𝐚̂́𝐩 𝐝𝐢̣𝐜𝐡 𝐕𝐮̣<-\n\n𝐅𝐀𝐂𝐄𝐁𝐎𝐎𝐊: 𝐋𝐢𝐤𝐞, 𝐅𝐨𝐥𝐥𝐨𝐰, 𝐂𝐦𝐭, 𝐌𝐚̆́𝐭 𝐥𝐢𝐯𝐞, 𝐕𝐢𝐞𝐰 𝐯𝐢𝐝𝐞𝐨, 𝐕𝐢𝐞𝐰 𝐬𝐭𝐨𝐫𝐲, 𝐓𝐚̆𝐧𝐠 𝐭𝐡𝐚̀𝐧𝐡 𝐯𝐢𝐞̂𝐧 𝐧𝐡𝐨́𝐦 𝐟𝐛\n\n𝐈𝐍𝐒𝐓𝐀𝐆𝐑𝐀𝐌: 𝐋𝐢𝐤𝐞, 𝐅𝐨𝐥𝐥𝐨𝐰\n\n𝐓𝐈𝐊𝐓𝐎𝐊: 𝐋𝐢𝐤𝐞, 𝐅𝐨𝐥𝐥𝐨𝐰, 𝐂𝐦𝐭, 𝐒𝐡𝐚𝐫𝐞, 𝐌𝐚̆́𝐭 𝐥𝐢𝐯𝐞, 𝐕𝐢𝐞𝐰 𝐯𝐢𝐝𝐞𝐨\n\n𝐘𝐎𝐔𝐓𝐔𝐁𝐄: 𝐋𝐢𝐤𝐞, 𝐕𝐢𝐞𝐰\n\n𝐓𝐖𝐈𝐓𝐓𝐄𝐑: 𝐋𝐢𝐤𝐞, 𝐅𝐨𝐥𝐥𝐨𝐰\n\n->𝐂𝐨́ 𝐧𝐡𝐮 𝐜𝐚̂̀𝐮 𝐛𝐮𝐟𝐟 𝐥𝐢𝐞̂𝐧 𝐡𝐞̣̂ 𝐚𝐝𝐦𝐢𝐧 𝐝𝐞̂̉ 𝐧𝐡𝐚̣̂𝐧 𝐮̛𝐮 𝐝𝐚̃𝐢 𝐯𝐚̀ 𝐠𝐢𝐚́ 𝐜𝐚̉ 𝐭𝐨̂́𝐭 𝐧𝐡𝐚̂́𝐭<-\n\n--->𝐓𝐚𝐭𝐬𝐮𝐘𝐓𝐁<---';
+
+        const allThread = global.data.allThreadID;
+        console.log('All thread IDs:', allThread);
+
+        const sentLog = loadSentLog();
+        const currentTimeSlot = moment().format('YYYY-MM-DD HH:mm');
+
+        for (const threadID of allThread) {
+            if (!sentLog[currentTimeSlot] || !sentLog[currentTimeSlot].includes(threadID)) {
+                try {
+                    console.log('Sharing contact to thread ID:', threadID);
+                    await new Promise((resolve, reject) => {
+                        api.shareContact(message, adminContact, threadID, (error) => {
+                            if (error) {
+                                reject(`Failed to share contact to thread ${threadID}: ${error}`);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    });
+                    if (!sentLog[currentTimeSlot]) {
+                        sentLog[currentTimeSlot] = [];
+                    }
+                    sentLog[currentTimeSlot].push(threadID);
+                    saveSentLog(sentLog);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.log(`Already sent message to thread ID: ${threadID} for this time slot`);
+            }
+        }
+        console.log('Finished sharing contacts');
+    } catch (error) {
+        console.error(`Error in shareContactToAllThreads: ${error}`);
+    }
+};
+
+module.exports.onLoad = function({ api }) {
+    console.log('Scheduling tasks for shareContactToAllThreads');
+
+    const timeZone = 'Asia/Ho_Chi_Minh';
+
+    // Schedule tasks at specific times
+    schedule.scheduleJob({ hour: 8, minute: 0, tz: timeZone }, () => {
+        console.log('Running scheduled task at 8:00 AM');
+        shareContactToAllThreads(api);
+    });
+
+    schedule.scheduleJob({ hour: 13, minute: 0, tz: timeZone }, () => {
+        console.log('Running scheduled task at 12:00 PM');
+        shareContactToAllThreads(api);
+    });
+
+    schedule.scheduleJob({ hour: 20, minute: 00, tz: timeZone }, () => {
+        console.log('Running scheduled task at 8:00 PM');
+        shareContactToAllThreads(api);
+    });
+
+    console.log('Scheduled tasks for shareContactToAllThreads at 8 AM, 12 PM, 3 PM, and 8 PM');
+};
+
+module.exports.run = function({ api, event }) {
+    console.log('Run function called');
+    shareContactToAllThreads(api);
+    api.sendMessage("Đã chia sẻ liên hệ tới tất cả các nhóm.", event.threadID);
+};

@@ -1,0 +1,74 @@
+const puppeteer = require('puppeteer-core');
+const fs = require('fs-extra');
+const path = require('path');
+
+module.exports.config = {
+    name: "capweb",
+    version: "1.0.0",
+    hasPermssion: 0,
+    credits: "TatsuYTB",
+    description: "Chụp màn hình một trang web theo URL người dùng cung cấp",
+    commandCategory: "Tiện ích",
+    usages: ["capweb <URL>"],
+    cooldowns: 60,
+    dependencies: {"puppeteer-core": ""}
+};
+
+module.exports.run = async function({ api, event, args }) {
+    if (!args[0]) {
+        console.log("No URL provided");
+        return api.sendMessage("𝐕𝐮𝐢 𝐥𝐨̀𝐧𝐠 𝐧𝐡𝐚̣̂𝐩 𝐔𝐑𝐋 𝐜𝐮̉𝐚 𝐭𝐫𝐚𝐧𝐠 𝐰𝐞𝐛 𝐜𝐚̂̀𝐧 𝐜𝐡𝐮̣𝐩!", event.threadID);
+    }
+
+    const url = args[0];
+    console.log("URL received: ", url);
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        console.log("Invalid URL format");
+        return api.sendMessage("𝐔𝐑𝐋 𝐤𝐡𝐨̂𝐧𝐠 𝐡𝐨̛̣𝐩 𝐥𝐞̣̂ 𝐯𝐮𝐢 𝐥𝐨̀𝐧𝐠 𝐧𝐡𝐚̣̂𝐩 𝐮𝐫𝐥 𝐜𝐨́ 𝐜𝐚̉ 𝐡𝐭𝐭𝐩 𝐡𝐨𝐚̣̆𝐜 𝐡𝐭𝐭𝐩𝐬 !!!", event.threadID);
+    }
+
+    api.sendMessage("𝐃𝐚𝐧𝐠 𝐜𝐡𝐮̣𝐩 𝐚̉𝐧𝐡 𝐦𝐚̀𝐧 𝐡𝐢̀𝐧𝐡, 𝐯𝐮𝐢 𝐥𝐨̀𝐧𝐠 𝐜𝐡𝐨̛̀...", event.threadID, async () => {
+        try {
+            console.log("Launching Puppeteer...");
+            const browser = await puppeteer.launch({
+                executablePath: 'C:/Users/Administrator/Desktop/chromium/chromium.exe',
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                headless: true
+            });
+            console.log("Puppeteer launched successfully");
+
+            const page = await browser.newPage();
+            console.log("New page created");
+
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+            console.log("User-Agent set");
+
+            await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+            console.log("Page loaded successfully: ", url);
+
+            await page.setViewport({ width: 1920, height: 1080 });
+            console.log("Viewport set to 1920x1080");
+
+            const screenshotPath = path.join(__dirname, 'screenshot.png');
+            await page.screenshot({ path: screenshotPath });
+            console.log("Screenshot taken and saved at: ", screenshotPath);
+
+            await browser.close();
+            console.log("Browser closed successfully");
+
+            api.sendMessage({
+                body: `𝐀̉𝐧𝐡 𝐜𝐮̉𝐚 𝐭𝐫𝐚𝐧𝐠 𝐰𝐞𝐛: ${url}`,
+                attachment: fs.createReadStream(screenshotPath)
+            }, event.threadID, () => {
+                fs.unlinkSync(screenshotPath);
+                console.log("Screenshot file deleted");
+            });
+        } catch (error) {
+            console.error('Error while taking screenshot:', error);
+            console.error(error.stack);
+            await browser.close();
+            api.sendMessage("𝐃𝐚̃ 𝐱𝐚̉𝐲 𝐫𝐚 𝐥𝐨̂̃𝐢 𝐤𝐡𝐢 𝐜𝐡𝐮̣𝐩 𝐚̉𝐧𝐡 𝐦𝐚̀𝐧 𝐡𝐢̀𝐧𝐡!", event.threadID);
+        }
+    });
+};

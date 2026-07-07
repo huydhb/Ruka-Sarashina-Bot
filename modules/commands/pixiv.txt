@@ -1,0 +1,178 @@
+const fs = require("fs-extra");
+const path = require("path");
+const puppeteer = require("puppeteer-core");
+const axios = require('axios');
+
+module.exports.config = {
+  name: "pixiv",
+  version: "1.0",
+  hasPermssion: 3,
+  credits: "TatsuYTB",
+  description: "Tìm kiếm ảnh trên Pixiv",
+  commandCategory: "Tiện ích",
+  usages: "[từ khóa] [số ảnh]",
+  cooldowns: 5,
+  requireReferrer: true,
+};
+
+module.exports.run = async function ({ api, event, args }) {
+  const [keyword, imageCount] = args;
+  if (!keyword || !imageCount) return api.sendMessage("Vui lòng nhập từ khóa và số lượng ảnh!", event.threadID);
+
+  const startTime = Date.now();
+
+  api.sendMessage("Vui lòng chờ...", event.threadID, async () => {
+    const images = await searchPixiv(keyword, parseInt(imageCount));
+    if (!images || images.length === 0) {
+      return api.sendMessage(`Không tìm thấy kết quả nào với từ khóa "${keyword}"`, event.threadID);
+    }
+
+    await downloadAndSendImages(api, event.threadID, keyword, images, parseInt(imageCount), startTime);
+  });
+};
+
+async function searchPixiv(keyword, imageCount) {
+  let browser;
+  try {
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: 'C:/Users/Administrator/Desktop/chromium/chromium.exe', 
+      timeout: 0, // Tăng thời gian chờ để tránh timeout
+    });
+
+    const page = await browser.newPage();
+    await page.setExtraHTTPHeaders({
+      'Referer': 'https://www.pixiv.net/',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, như Gecko) Chrome/105.0.0.0 Safari/537.36'
+    });
+
+    await page.goto(`https://www.pixiv.net/en/tags/${keyword}/artworks?s_mode=s_tag`, { waitUntil: 'networkidle2' });
+
+    await page.waitForSelector('a[href^="/en/artworks/"]', { timeout: 60000 }); // Tăng thời gian chờ
+
+    const artworkUrls = await page.$$eval(
+      'a[href^="/en/artworks/"]',
+      (links) => links.map(link => link.href)
+    );
+
+    await browser.close();
+
+    return artworkUrls;
+  } catch (error) {
+    console.error("Error while searching Pixiv:", error);
+    if (browser) {
+      await browser.close();
+    }
+    return [];
+  }
+}
+
+async function downloadAndSendImages(api, threadID, keyword, artworkUrls, requiredImageCount, startTime) {
+  const imageDir = path.join(__dirname, "pixiv", "anh");
+
+  if (!fs.existsSync(imageDir)) {
+    fs.mkdirSync(imageDir, { recursive: true });
+  }
+
+  let browser;
+  const downloadedUrls = new Set();
+  const downloadedImages = [];
+
+  try {
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: 'C:/Users/bin/Chromium/Application/chromium.exe',
+      timeout: 0,
+    });
+
+    while (downloadedImages.length < requiredImageCount && artworkUrls.length > 0) {
+      const artworkUrl = artworkUrls.shift();
+
+      if (downloadedUrls.has(artworkUrl)) {
+        console.log(`Skipping duplicate URL: ${artworkUrl}`);
+        continue;
+      }
+
+      const imageUrl = await getImageUrlFromArtworkPage(browser, artworkUrl);
+      if (imageUrl) {
+        downloadedUrls.add(artworkUrl);
+
+        const imagePath = path.join(imageDir, `${downloadedUrls.size}.jpg`);
+        await downloadImage(imageUrl, imagePath);
+
+        downloadedImages.push(imagePath);
+      }
+    }
+
+    if (downloadedImages.length > 0) {
+      const attachments = downloadedImages.map(imagePath => fs.createReadStream(imagePath));
+      const endTime = Date.now();
+      const processingTime = (endTime - startTime) / 1000;
+
+      const message = `Kết quả tìm kiếm hàng đầu với từ khóa "${keyword}" \nThời gian xử lý: ${processingTime.toFixed(2)} giây!`;
+
+      api.sendMessage({ body: message, attachment: attachments }, threadID, (error) => {
+        if (error) {
+          console.error("Error while sending message:", error);
+        } else {
+          downloadedImages.forEach(imagePath => fs.unlinkSync(imagePath));
+        }
+      });
+    } else {
+      api.sendMessage(`Không thể tải đủ số lượng ảnh yêu cầu (${requiredImageCount}) với từ khóa "${keyword}".`, threadID);
+    }
+
+    await browser.close();
+  } catch (error) {
+    console.error("Error while downloading images:", error);
+    if (browser) {
+      await browser.close();
+    }
+  }
+}
+
+async function getImageUrlFromArtworkPage(browser, artworkUrl, retries = 3) {
+  let page;
+  try {
+    page = await browser.newPage();
+    await page.setExtraHTTPHeaders({
+      'Referer': 'https://www.pixiv.net/',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, như Gecko) Chrome/105.0.0.0 Safari/537.36'
+    });
+    await page.goto(artworkUrl, { waitUntil: 'networkidle2', timeout: 60000 }); // Tăng thời gian chờ
+
+    const imageUrl = await page.$eval('img[src^="https://i.pximg.net/"]', img => img.src);
+
+    await page.close();
+
+    return imageUrl;
+  } catch (error) {
+    console.error(`Error while fetching image URL from artwork page: ${artworkUrl}`, error);
+    if (retries > 0) {
+      console.log(`Retrying... (${3 - retries + 1})`);
+      if (page) await page.close();
+      return await getImageUrlFromArtworkPage(browser, artworkUrl, retries - 1);
+    } else {
+      if (page) await page.close();
+      return null;
+    }
+  }
+}
+
+async function downloadImage(imageUrl, imagePath) {
+  const response = await axios.get(imageUrl, {
+    responseType: "stream",
+    headers: {
+      'Referer': 'https://www.pixiv.net/',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'
+    }
+  });
+
+  const writer = fs.createWriteStream(imagePath);
+  response.data.pipe(writer);
+
+  return new Promise((resolve, reject) => {
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
+}

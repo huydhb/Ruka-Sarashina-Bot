@@ -1,0 +1,53 @@
+const puppeteer = require('puppeteer-core');
+const fs = require('fs-extra');
+const path = require('path');
+
+module.exports.config = {
+    name: "cw",
+    version: "1.0.0",
+    hasPermssion: 0,
+    credits: "TatsuYTB",
+    description: "Chụp trang cá nhân Facebook",
+    commandCategory: "Tiện ích",
+    usages: ["cw"],
+    cooldowns: 60,
+    dependencies: { "puppeteer-core": "" }
+};
+
+module.exports.run = async function({ api, event }) {
+    const facebookId = event.senderID;
+    if (!facebookId) return api.sendMessage("𝐃𝐚̃ 𝐱𝐚̉𝐲 𝐫𝐚 𝐥𝐨̂̃𝐢!", event.threadID);
+
+    api.sendMessage("𝐕𝐮𝐢 𝐥𝐨̀𝐧𝐠 𝐜𝐡𝐨̛̀...", event.threadID, async () => {
+        const browser = await puppeteer.launch({
+            executablePath: 'C:/Users/Administrator/Desktop/chromium/chromium.exe',
+            headless: false,
+            userDataDir: 'C:/Users/Administrator/AppData/Local/Chromium/User Data',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+
+        try {
+            const page = await browser.newPage();
+
+            await page.goto(`https://www.facebook.com/${facebookId}`, { waitUntil: 'networkidle2', timeout: 60000 });
+
+            await page.setViewport({ width: 1920, height: 1080 });
+
+            const screenshotPath = path.join(__dirname, 'screenshot.png');
+            await page.screenshot({ path: screenshotPath });
+
+            await browser.close();
+
+            api.sendMessage({
+                body: "𝐀̉𝐧𝐡 𝐭𝐫𝐚𝐧𝐠 𝐜𝐚́ 𝐧𝐡𝐚̂𝐧 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐜𝐮̉𝐚 𝐛𝐚̣𝐧 𝐝𝐚̂𝐲!",
+                attachment: fs.createReadStream(screenshotPath)
+            }, event.threadID);
+
+            fs.unlinkSync(screenshotPath);
+        } catch (error) {
+            console.error('Error while taking screenshot:', error);
+            await browser.close();
+            api.sendMessage("𝐃𝐚̃ 𝐱𝐚̉𝐲 𝐫𝐚 𝐥𝐨̂̃𝐢!", event.threadID);
+        }
+    });
+};

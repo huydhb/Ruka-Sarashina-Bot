@@ -1,0 +1,151 @@
+module.exports.config = {
+    name: "thoitiet",
+    version: "1.0.2",
+    hasPermssion: 0,
+    credits: "D-Jukie convert từ Goat(TatsuYTB)",
+    description: "Xem thời tiết trong 5 ngày",
+    commandCategory: "Tiện ích",
+    usages: "[location]",
+    cooldowns: 15
+};
+
+module.exports.run = async function({ api, event, args }) {
+    const axios = require("axios");
+    const moment = require("moment-timezone");
+    const Canvas = require("canvas");
+    const fs = require("fs-extra");
+    const svg2img = require("svg2img");
+
+    const apikey = "d7e795ae6a0d44aaa8abb1a0a7ac19e4";
+    const area = args.join(" ");
+    console.log("📌 Nhận yêu cầu xem thời tiết cho:", area);
+
+    if (!area) return api.sendMessage(`Vui lòng nhập địa điểm!`, event.threadID, event.messageID);
+
+    let areaKey, location = {}, dataWeather;
+
+    // Tải ảnh nền nếu chưa có
+    if (!fs.existsSync(__dirname + '/cache/bgweather.jpg')) {
+        console.log("⬇️ Tải ảnh nền...");
+        let getbg = (await axios.get(`https://i.imgur.com/1Rx88Te.jpg`, { responseType: "arraybuffer" })).data;
+        fs.writeFileSync(__dirname + "/cache/bgweather.jpg", Buffer.from(getbg, "utf-8"));
+    }
+
+    // Tải font nếu chưa có
+    if (!fs.existsSync(__dirname + "/cache/Play-Bold.ttf")) {
+        console.log("⬇️ Tải font chữ...");
+        let getfont = (await axios.get("https://drive.google.com/u/0/uc?id=1uni8AiYk7prdrC7hgAmezaGTMH5R8gW8&export=download", { responseType: "arraybuffer" })).data;
+        fs.writeFileSync(__dirname + "/cache/Play-Bold.ttf", Buffer.from(getfont, "utf-8"));
+    }
+
+    // ===> Tìm địa điểm
+    try {
+        console.log("🔍 Đang tìm kiếm địa điểm...");
+        const resLocation = await axios.get(`https://api.accuweather.com/locations/v1/cities/search.json?q=${encodeURIComponent(area)}&apikey=${apikey}&language=vi-vn`);
+        console.log("📦 Kết quả tìm kiếm:", JSON.stringify(resLocation.data, null, 2));
+
+        if (resLocation.data.length === 0) {
+            console.log("❌ Không có kết quả trả về.");
+            return api.sendMessage(`Không tìm thấy địa điểm này!`, event.threadID, event.messageID);
+        }
+
+        const data = resLocation.data[0];
+        areaKey = data.Key;
+        location = {
+            latitude: data.GeoPosition.Latitude,
+            longitude: data.GeoPosition.Longitude
+        };
+        console.log("✅ Tìm thấy:", data.LocalizedName, "| Key:", areaKey);
+    } catch (err) {
+        console.error("❌ Lỗi tìm địa điểm:", err.response?.data || err.message);
+        return api.sendMessage(`Đã có lỗi xảy ra khi tìm kiếm địa điểm!`, event.threadID, event.messageID);
+    }
+
+    // ===> Lấy dữ liệu thời tiết
+    try {
+        console.log("🌤️ Lấy dữ liệu thời tiết...");
+        const resWeather = await axios.get(`http://api.accuweather.com/forecasts/v1/daily/10day/${areaKey}?apikey=${apikey}&details=true&language=vi`);
+        dataWeather = resWeather.data;
+        console.log("✅ Dữ liệu thời tiết lấy được:", JSON.stringify(dataWeather, null, 2));
+    } catch (err) {
+        console.error("❌ Lỗi khi lấy dữ liệu thời tiết:", err.response?.data || err.message);
+        return api.sendMessage(`Đã có lỗi xảy ra khi lấy dữ liệu thời tiết!`, event.threadID, event.messageID);
+    }
+
+    function convertFtoC(F) { return Math.floor((F - 32) / 1.8); }
+    function formatHours(hours) { return moment(hours).tz("Asia/Ho_Chi_Minh").format("HH[h]mm[p]"); }
+    function translateWindDirection(direction) {
+        const directions = {
+            "B": "Bắc", "BB": "Bắc Đông Bắc", "ĐB": "Đông Bắc", "Đ": "Đông",
+            "ĐN": "Đông Đông Nam", "N": "Nam", "NTN": "Nam Tây Nam",
+            "T": "Tây", "TT": "Tây Tây Bắc", "TNB": "Tây Nam"
+        };
+        return directions[direction] || direction;
+    }
+
+    const today = dataWeather.DailyForecasts[0];
+    const windDirection = translateWindDirection(today.Day.Wind.Direction.Localized);
+
+    let msg = `Dự báo thời tiết:\n${dataWeather.Headline.Text}` +
+        `\n🌡 Nhiệt độ: ${convertFtoC(today.Temperature.Minimum.Value)}°C - ${convertFtoC(today.Temperature.Maximum.Value)}°C` +
+        `\n🌡 Cảm nhận: ${convertFtoC(today.RealFeelTemperature.Minimum.Value)}°C - ${convertFtoC(today.RealFeelTemperature.Maximum.Value)}°C` +
+        `\n🌅 Mặt trời mọc: ${formatHours(today.Sun.Rise)}` +
+        `\n🌄 Mặt trời lặn: ${formatHours(today.Sun.Set)}` +
+        `\n☁️ Mật độ mây: ${today.Day.CloudCover}%` +
+        `\n💨 Gió: ${windDirection} - ${today.Day.Wind.Speed.Value} km/h` +
+        `\n🌧️ Mưa: ${today.Day.PrecipitationProbability}% | ⚡ Dông: ${today.Day.ThunderstormProbability}%` +
+        `\n🔆 UV: ${today.AirAndPollen[5].Value}` +
+        `\n💧 Ẩm: Min ${today.Day.RelativeHumidity.Minimum}%, Max ${today.Day.RelativeHumidity.Maximum}%, TB ${today.Day.RelativeHumidity.Average}%` +
+        `\n🌦️ Mưa trong ngày: ${today.Day.HoursOfPrecipitation} giờ` +
+        `\n🔥 Bốc hơi: ${today.Day.Evapotranspiration.Value} in` +
+        `\n🔅 Bức xạ: ${today.Day.SolarIrradiance.Value} W/m²` +
+        `\n💧 Nhiệt độ ướt: ${convertFtoC(today.Day.WetBulbTemperature.Minimum.Value)}°C - ${convertFtoC(today.Day.WetBulbTemperature.Maximum.Value)}°C`;
+
+    console.log("📨 Tin nhắn chuẩn bị gửi:\n" + msg);
+
+    Canvas.registerFont(__dirname + "/cache/Play-Bold.ttf", { family: "Play-Bold" });
+    const bg = await Canvas.loadImage(__dirname + "/cache/bgweather.jpg");
+    const canvas = Canvas.createCanvas(bg.width, bg.height);
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(bg, 0, 0);
+
+    // Vẽ dự báo 7 ngày tới
+    const days = dataWeather.DailyForecasts.slice(0, 7);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "22px Play-Bold";
+    let X = 100;
+
+    for (const item of days) {
+        try {
+            const iconURL = `http://vortex.accuweather.com/adc2010/images/slate/icons/${item.Day.Icon}.svg`;
+            const iconBuffer = (await axios.get(iconURL, { responseType: "arraybuffer" })).data;
+            svg2img(iconBuffer, { width: 80, height: 80 }, (err, buffer) => {
+                if (!err) {
+                    const img = new Canvas.Image();
+                    img.src = buffer;
+                    ctx.drawImage(img, X, 210, 80, 80);
+                }
+            });
+
+            ctx.fillText(`${convertFtoC(item.Temperature.Maximum.Value)}°C`, X, 366);
+            ctx.fillText(`${convertFtoC(item.Temperature.Minimum.Value)}°C`, X, 445);
+            ctx.fillText(moment(item.Date).format("DD"), X + 20, 140);
+            X += 135;
+        } catch (e) {
+            console.log("⚠️ Lỗi khi vẽ icon ngày:", e.message);
+        }
+    }
+
+    const imgPath = __dirname + "/cache/weather.jpg";
+    fs.writeFileSync(imgPath, canvas.toBuffer());
+
+    try {
+        console.log("📤 Gửi ảnh thời tiết...");
+        return api.sendMessage({
+            body: msg,
+            attachment: fs.createReadStream(imgPath)
+        }, event.threadID, () => fs.unlinkSync(imgPath), event.messageID);
+    } catch (err) {
+        console.error("❌ Lỗi khi gửi tin nhắn:", err);
+    }
+};

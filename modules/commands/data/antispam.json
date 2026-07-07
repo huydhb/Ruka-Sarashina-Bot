@@ -1,0 +1,52 @@
+{
+    "7102222933173600": {
+        "spamCount": 5,
+        "spamTime": 11000,
+        "status": false
+    },
+    "25875020935479286": {
+        "spamCount": 5,
+        "spamTime": 10000,
+        "status": false
+    },
+    "8854333414654256": {
+        "spamCount": 10,
+        "spamTime": 5000,
+        "status": false
+    },
+    "7383130448479880": {
+        "spamCount": 7,
+        "spamTime": 10000,
+        "status": true
+    },
+    "9304721159538422": {
+        "spamCount": 7,
+        "spamTime": 10000,
+        "status": true
+    },
+    "8849932305124493": {
+        "spamCount": 10,
+        "spamTime": 9000,
+        "status": true
+    },
+    "8287626228009666": {
+        "spamCount": 10,
+        "spamTime": 9000,
+        "status": true
+    },
+    "8672669309453964": {
+        "spamCount": 10,
+        "spamTime": 8000,
+        "status": true
+    },
+    "9252450694789087": {
+        "spamCount": 10,
+        "spamTime": 8000,
+        "status": true
+    },
+    "6272884602803031": {
+        "spamCount": 5,
+        "spamTime": 10000,
+        "status": true
+    }
+}

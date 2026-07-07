@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TatsuYTB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        .avatar-container {
+            margin-bottom: 10px;
+            transform: translateY(20px);
+        }
+
+        .modern-audio-player {
+    width: 100%;
+    max-width: 400px;
+    background-color: #1f1f1f;
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.song-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.song-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.song-details #songTitle {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.controls button {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.game-control {
+    background-color: #333;
+    color: white;
+    border: none;
+    width: 20px;
+    height: 100px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.controls button:hover {
+    background-color: #555;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-container input[type="range"] {
+    flex-grow: 1;
+    height: 5px;
+    border-radius: 5px;
+    background-color: #555;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.progress-container input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.progress-container span {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.volume-container {
+    position: relative;
+}
+
+.volume-slider {
+    display: none;
+    position: absolute;
+    bottom: 240%;
+    left: -130%;
+    width: 100px;
+    transform: rotate(270deg);
+}
+
+.volume-container .volume-icon {
+    font-size: 20px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.volume-container:hover .volume-slider {
+    display: block;
+}
+
+.volume-container:hover .volume-icon {
+    color: white;
+}
+
+        .info-text {
+            margin-top: 20px;
+            text-align: center;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% { color: red; }
+            25% { color: green; }
+            50% { color: blue; }
+            75% { color: yellow; }
+            100% { color: red; }
+        }
+
+        #clock {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .game-board {
+            display: grid;
+            gap: 5px;
+            margin-top: 20px;
+            border: 2px solid #000;
+            display: none;
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .game-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .bot-select {
+            position: absolute;
+            bottom: 20px;
+            left: 120px;
+        }
+    </style>
+</head>
+<body>
+    <video class="video-background" autoplay muted loop playsinline preload="auto">
+        <source src="https://files.catbox.moe/v8uz2r.mp4" type="video/mp4">
+       
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="avatar-container animate__animated animate__fadeIn">
+        <img src="https://files.catbox.moe/4va0jf.png" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%;">
+    </div>
+
+    <div class="info-text animate__animated animate__fadeIn">
+        <p>𝐓𝐞̂𝐧: 𝐍𝐠𝐮𝐲𝐞̂̃𝐧 𝐓𝐮𝐚̂́𝐧 𝐍𝐢𝐧𝐡</p>
+        <p>𝐃𝐨𝐧𝐚𝐭𝐞: 𝟖𝟖𝟔𝟒𝟗𝟐𝟐𝟓𝟖𝟎 𝐁𝐈𝐃𝐕</p>
+        <p>𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤: <a href="https://www.facebook.com/TatsuYTB" target="_blank">𝐍𝐠𝐮𝐲𝐞̂̃𝐧 𝐓𝐮𝐚̂́𝐧 𝐍𝐢𝐧𝐡 (𝐭𝐚𝐭𝐬𝐮)</a></p>
+        <p>𝐆𝐦𝐚𝐢𝐥: 𝐜𝐨𝐧𝐭𝐚𝐜𝐭.𝐭𝐚𝐭𝐬𝐮𝐲𝐭𝐛@𝐠𝐦𝐚𝐢𝐥.𝐜𝐨𝐦</p>
+    </div>
+
+    <div class="modern-audio-player">
+        <div class="song-info">
+            <img id="songCover" src="https://files.catbox.moe/4va0jf.png" alt="Cover Art">
+            <div class="song-details">
+                <span id="songTitle">Music</span>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="prevButton">⏮</button>
+            <button id="rewindButton">↻</button>
+            <button id="playPauseButton">⏵</button>
+            <button id="forwardButton">⏩</button>
+            <button id="nextButton">⏭</button>
+        </div>
+        <div class="progress-container">
+            <span id="currentTime">0:00</span>
+            <input type="range" id="progressBar" min="0" max="100" value="0">
+            <span id="duration">0:00</span><div class="volume-container">
+                <span id="volumeIcon" class="volume-icon">🔊</span>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1" class="volume-slider">
+            </div>
+        </div>
+        </div>
+        
+    <audio id="audioPlayer" preload="auto"></audio>    
+
+    <div id="clock"></div>
+
+    <div class="game-control">
+        <button onclick="toggleGame()" class="game-button">Mở trò chơi</button>
+        <select id="bot-mode" class="bot-select">
+            <option value="random">Bot dễ</option>
+            <option value="smart">Bot khó</option>
+        </select>
+    </div>
+
+    <div id="game-board" class="game-board"></div>
+    <div class="status" id="status"></div>
+
+    <script>
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let isPlayerTurn = true;
+        const MAX_DEPTH = 7;
+        const gridSize = 3;
+        let winCondition = 3;
+
+        function toggleGame() {
+            gameActive = true;
+            currentPlayer = 'X';
+            isPlayerTurn = true;
+            winCondition = 3;
+
+            document.getElementById('status').textContent = "Lượt của người chơi (X)";
+            createBoard();
+        }
+
+        function createBoard() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            board.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.addEventListener('click', () => handleCellClick(cell));
+                board.appendChild(cell);
+            }
+            board.style.display = 'grid';
+        }
+
+        function handleCellClick(cell) {
+            if (cell.textContent !== '' || !gameActive || !isPlayerTurn) return;
+            cell.textContent = currentPlayer;
+
+            if (checkWin()) {
+                document.getElementById('status').textContent = `${currentPlayer} thắng!`;
+                gameActive = false;
+                return;
+            }
+
+            if (isDraw()) {
+                document.getElementById('status').textContent = "Hòa!";
+                gameActive = false;
+                return;
+            }
+
+            isPlayerTurn = false;
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+            document.getElementById('status').textContent = "Lượt của bot (O)";
+            setTimeout(() => {
+                botMove();
+            }, 300);
+        }
+
+        function botMove() {
+            if (!gameActive) return;
+            const botMode = document.getElementById('bot-mode').value;
+            let cell;
+
+            if (botMode === 'random') {
+                const emptyCells = Array.from(document.querySelectorAll('.cell')).filter(c => c.textContent === '');
+                cell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            } else {
+                cell = minimaxMove();
+            }
+
+            if (cell) {
+                cell.textContent = 'O';
+                if (checkWin()) {
+                    document.getElementById('status').textContent = "Bot (O) thắng!";
+                    gameActive = false;
+                    return;
+                }
+
+                if (isDraw()) {
+                    document.getElementById('status').textContent = "Hòa!";
+                    gameActive = false;
+                    return;
+                }
+
+                isPlayerTurn = true;
+                currentPlayer = 'X';
+                document.getElementById('status').textContent = "Lượt của người chơi (X)";
+            }
+        }
+
+        function minimaxMove() {
+            const cells = Array.from(document.querySelectorAll('.cell'));
+            let bestMove = null;
+            let bestScore = -Infinity;
+            let alpha = -Infinity;
+            let beta = Infinity;
+
+            for (let i = 0; i < cells.length; i++) {
+                if (cells[i].textContent === '') {
+                    cells[i].textContent = 'O';
+                    let score = minimax(cells, 0, false, alpha, beta);
+                    cells[i].textContent = '';
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMove = cells[i];
+                    }
+
+                    alpha = Math.max(alpha, score);
+                    if (beta <= alpha) break;
+                }
+            }
+
+            return bestMove;
+        }
+
+        function minimax(cells, depth, isMaximizing, alpha, beta) {
+            if (checkWin()) {
+                return isMaximizing ? -10 : 10;
+            }
+
+            if (isDraw()) {
+                return 0;
+            }
+
+            const emptyCells = cells.filter(cell => cell.textContent === '');
+
+            if (depth >= MAX_DEPTH) {
+                return 0;
+            }
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < emptyCells.length; i++) {
+                    emptyCells[i].textContent = 'O';
+                    let score = minimax(cells, depth + 1, false, alpha, beta);
+                    emptyCells[i].textContent = '';
+                    bestScore = Math.max(score, bestScore);
+                    alpha = Math.max(alpha, bestScore);
+                    if (beta <= alpha) break;
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < emptyCells.length; i++) {
+                    emptyCells[i].textContent = 'X';
+                    let score = minimax(cells, depth + 1, true, alpha, beta);
+                    emptyCells[i].textContent = '';
+                    bestScore = Math.min(score, bestScore);
+                    beta = Math.min(beta, bestScore);
+                    if (beta <= alpha) break;
+                }
+                return bestScore;
+            }
+        }
+
+        function checkWin() {
+            const cells = Array.from(document.querySelectorAll('.cell')).map(cell => cell.textContent);
+            const lines = [];
+
+            for (let i = 0; i < gridSize; i++) {
+                lines.push(cells.slice(i * gridSize, (i + 1) * gridSize));
+                lines.push(cells.filter((_, index) => index % gridSize === i));
+            }
+
+            lines.push(cells.filter((_, index) => index % (gridSize + 1) === 0));
+            lines.push(cells.filter((_, index) => index % (gridSize - 1) === 0 && index > 0 && index < cells.length - 1));
+
+            return lines.some(line => line.filter(cell => cell === 'X').length >= winCondition || line.filter(cell => cell === 'O').length >= winCondition);
+        }
+
+        function isDraw() {
+            const cells = Array.from(document.querySelectorAll('.cell'));
+            return cells.every(cell => cell.textContent !== '');
+        }
+
+        const songs = [
+    'https://files.catbox.moe/eqqdvx.mp3',
+    'https://files.catbox.moe/8g3pyw.mp3',
+    'https://files.catbox.moe/dwy88x.mp3',
+    'https://files.catbox.moe/ogh6es.mp3',
+    'https://files.catbox.moe/tq7c6n.mp3',
+    'https://files.catbox.moe/udwa85.mp3',
+    'https://files.catbox.moe/9racy9.mp3',
+    'https://files.catbox.moe/4d30vk.mp3',
+    'https://files.catbox.moe/772a4y.mp3',
+    'https://files.catbox.moe/x3mlgd.mp3',
+    'https://files.catbox.moe/ugpt27.mp3',
+    'https://files.catbox.moe/lyueul.mp3',
+    'https://files.catbox.moe/nhapcg.mp3',
+    'https://files.catbox.moe/fu4xbc.mp3'
+];
+
+let currentSongIndex = 0;
+const audioPlayer = document.getElementById('audioPlayer');
+const playPauseButton = document.getElementById('playPauseButton');
+const progressBar = document.getElementById('progressBar');
+const currentTime = document.getElementById('currentTime');
+const duration = document.getElementById('duration');
+const prevButton = document.getElementById('prevButton');
+const nextButton = document.getElementById('nextButton');
+const rewindButton = document.getElementById('rewindButton');
+const forwardButton = document.getElementById('forwardButton');
+const volumeSlider = document.getElementById('volumeSlider');
+const volumeIcon = document.getElementById('volumeIcon');
+
+function loadSong(index) {
+    audioPlayer.src = songs[index];
+}
+
+loadSong(currentSongIndex);
+
+audioPlayer.addEventListener('timeupdate', () => {
+    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    progressBar.value = progress || 0;
+    currentTime.textContent = formatTime(audioPlayer.currentTime);
+});
+
+audioPlayer.addEventListener('loadedmetadata', () => {
+    duration.textContent = formatTime(audioPlayer.duration);
+});
+
+playPauseButton.addEventListener('click', () => {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseButton.textContent = '⏸';
+    } else {
+        audioPlayer.pause();
+        playPauseButton.textContent = '⏵';
+    }
+});
+
+prevButton.addEventListener('click', () => {
+    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playPauseButton.textContent = '⏸';
+});
+
+nextButton.addEventListener('click', () => {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playPauseButton.textContent = '⏸';
+});
+
+rewindButton.addEventListener('click', () => {
+    audioPlayer.currentTime = 0;
+    audioPlayer.play();
+});
+
+forwardButton.addEventListener('click', () => {
+    audioPlayer.currentTime = Math.min(audioPlayer.currentTime + 10, audioPlayer.duration);
+});
+
+volumeSlider.addEventListener('input', (e) => {
+    audioPlayer.volume = e.target.value;
+    volumeIcon.textContent = e.target.value > 0 ? '🔊' : '🔇';
+});
+
+progressBar.addEventListener('input', (e) => {
+    const newTime = (e.target.value / 100) * audioPlayer.duration;
+    audioPlayer.currentTime = newTime;
+});
+
+audioPlayer.addEventListener('ended', () => {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+});
+
+function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+}
+
+volumeIcon.addEventListener('click', () => {
+    if (audioPlayer.volume > 0) {
+        audioPlayer.volume = 0;
+        volumeSlider.value = 0;
+        volumeIcon.textContent = '🔇';
+    } else {
+        audioPlayer.volume = 1;
+        volumeSlider.value = 1;
+        volumeIcon.textContent = '🔊';
+    }
+});
+
+function playRandomSong() {
+            const randomIndex = Math.floor(Math.random() * songs.length);
+            const randomSong = songs[randomIndex];
+            const audio = document.getElementById('audioPlayer');
+            audio.src = randomSong;
+            audio.play();
+        }
+
+window.onload = () => {
+    playRandomSong();
+    volumeSlider.value = 0.5;
+    audioPlayer.volume = 0.5;
+};
+
+        function updateClock() {
+    const now = new Date();
+    const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+    const day = days[now.getDay()];
+    const date = now.toLocaleDateString('vi-VN');
+    const time = now.toLocaleTimeString('vi-VN');
+    const timezone = 'GMT+7';
+
+    document.getElementById('clock').innerHTML = `${day} - ${date}<br>${timezone} - ${time}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local database files
+includes/data.sqlite
+includes/data.sqlite-journal
+includes/data.sqlite-wal
+includes/data.sqlite-shm
+includes/data.sqlite.temp
+modules/commands/usages.json
+blockedIP.json
+
+# Credentials and sensitive configuration files
+appstate.json
+2.json
+
+# Cache and temp files
+.replit
+replit.nix
+main.sh
+.temp/
+*.temp
+modules/commands/cache/
+modules/commands/tuongtac/checktt/*.json
